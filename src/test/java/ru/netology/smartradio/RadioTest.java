@@ -5,58 +5,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RadioTest {
 
-    // --- ТЕСТЫ ДЛЯ ГРОМКОСТИ ---
-
     @Test
     public void shouldIncreaseVolume() {
         Radio radio = new Radio();
-        radio.setCurrentVolume(50); // Устанавливаем исходное значение
-
+        radio.setCurrentVolume(50);
         radio.increaseVolume();
-
-        assertEquals(51, radio.getCurrentVolume()); // Проверяем, что увеличилось
+        assertEquals(51, radio.getCurrentVolume());
     }
 
     @Test
     public void shouldNotIncreaseVolumeOverMax() {
         Radio radio = new Radio();
-        radio.setCurrentVolume(100); // Граничное условие: уже максимум
-
+        radio.setCurrentVolume(100);
         radio.increaseVolume();
-
-        assertEquals(100, radio.getCurrentVolume()); // Проверяем, что не изменилось
+        assertEquals(100, radio.getCurrentVolume());
     }
 
     @Test
-    public void shouldTurnDownVolume() {
+    public void shouldDecreaseVolume() {
         Radio radio = new Radio();
         radio.setCurrentVolume(50);
-
-        radio.TurnDownVolume();
-
+        radio.decreaseVolume();
         assertEquals(49, radio.getCurrentVolume());
     }
 
     @Test
-    public void shouldNotTurnDownVolumeBelowMin() {
+    public void shouldNotDecreaseVolumeBelowMin() {
         Radio radio = new Radio();
-        radio.setCurrentVolume(0); // Граничное условие: уже минимум
-
-        radio.TurnDownVolume();
-
+        radio.setCurrentVolume(0);
+        radio.decreaseVolume();
         assertEquals(0, radio.getCurrentVolume());
     }
-
-    // --- ТЕСТЫ ДЛЯ СТАНЦИЙ ---
-    // ВАШЕ ЗАДАНИЕ: Допишите тесты ниже по аналогии!
 
     @Test
     public void shouldNextStation() {
         Radio radio = new Radio();
         radio.setCurrentStation(5);
-
         radio.next();
-
         assertEquals(6, radio.getCurrentStation());
     }
 
@@ -65,7 +50,7 @@ public class RadioTest {
         Radio radio = new Radio();
         radio.setCurrentStation(9);
         radio.next();
-        assertEquals(0,radio.getCurrentStation());
+        assertEquals(0, radio.getCurrentStation());
     }
 
     @Test
@@ -73,15 +58,14 @@ public class RadioTest {
         Radio radio = new Radio();
         radio.setCurrentStation(5);
         radio.previous();
-        assertEquals(4,radio.getCurrentStation());
+        assertEquals(4, radio.getCurrentStation());
     }
 
     @Test
     public void shouldPrevStationFromMin() {
         Radio radio = new Radio();
-        radio.setCurrentStation(0);
         radio.previous();
-        assertEquals(9,radio.getCurrentStation());
+        assertEquals(9, radio.getCurrentStation());
     }
 
     @Test
@@ -94,7 +78,48 @@ public class RadioTest {
     @Test
     public void shouldNotSetCurrentStationInvalid() {
         Radio radio = new Radio();
-        radio.setCurrentStation(15); // Недопустимое значение
-        assertEquals(0, radio.getCurrentStation()); // Должно остаться 0 (из конструктора)
+        radio.setCurrentStation(15);
+        assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldCreateRadioWithDefaultStationsCount() {
+        Radio radio = new Radio();
+        assertEquals(10, radio.getStationsCount());
+    }
+
+    @Test
+    public void shouldCreateRadioWithCustomStationsCount() {
+        Radio radio = new Radio(5);
+        assertEquals(5, radio.getStationsCount());
+    }
+
+    @Test
+    public void shouldCreateRadioWithInvalidStationsCount() {
+        Radio radio = new Radio(0);
+        assertEquals(10, radio.getStationsCount());
+    }
+
+    @Test
+    public void shouldNextStationWrapAroundWithCustomCount() {
+        Radio radio = new Radio(5);
+        radio.setCurrentStation(4);
+        radio.next();
+        assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldPrevStationWrapAroundWithCustomCount() {
+        Radio radio = new Radio(5);
+        radio.setCurrentStation(0);
+        radio.previous();
+        assertEquals(4, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldNotSetStationBeyondCustomMax() {
+        Radio radio = new Radio(5);
+        radio.setCurrentStation(10);
+        assertEquals(0, radio.getCurrentStation());
     }
 }
